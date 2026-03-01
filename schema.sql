@@ -1,0 +1,40 @@
+CREATE DATABASE IF NOT EXISTS shopping_cart;
+USE shopping_cart;
+
+CREATE TABLE IF NOT EXISTS users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password_hash VARCHAR(64) NOT NULL,
+    address VARCHAR(500) NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS items (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    price DECIMAL(10,2) NOT NULL,
+    category VARCHAR(30) NOT NULL,
+    stock INT NOT NULL DEFAULT 100,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS cart (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(150) NOT NULL,
+    item_id INT NOT NULL,
+    quantity INT NOT NULL,
+    UNIQUE KEY unique_cart_item (user_email, item_id),
+    FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS orders (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_email VARCHAR(150) NOT NULL,
+    item_id INT NOT NULL,
+    item_name VARCHAR(100) NOT NULL,
+    unit_price DECIMAL(10,2) NOT NULL,
+    quantity INT NOT NULL,
+    total_price DECIMAL(10,2) NOT NULL,
+    ordered_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
